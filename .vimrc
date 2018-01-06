@@ -29,6 +29,8 @@ inoremap jj <Esc>
 " カーソル下の単語を * で検索
 vnoremap <silent> * "vy/\V<C-r>=substitute(escape(@v, '\/'), "\n", '\\n', 'g')<CR><CR>
 
+" fugitive.vimを横分割に
+set diffopt+=vertical
 
 if &compatible
   set nocompatible               " Be iMproved
@@ -52,7 +54,12 @@ function! s:hooks.on_source(bundle)
       \ "*": {"split": "vertical"},
       \ }
 endfunction
-
+NeoBundle "tpope/vim-fugitive"
+NeoBundleLazy "gregsexton/gitv", {
+      \ "depends": ["tpope/vim-fugitive"],
+      \ "autoload": {
+      \   "commands": ["Gitv"],
+      \ }}
 NeoBundleLazy "lambdalisue/vim-django-support", {
       \ "autoload": {
       \   "filetypes": ["python", "python3", "djangohtml"]
