@@ -10,6 +10,7 @@
 virtualenvwrapper.shの書き換え(pythonからpython3.6に)
 
 .bashrcに以下を追記
+
     if [ -f /usr/bin/virtualenvwrapper.sh ]; then
         export WORKON_HOME=$HOME/.virtualenvs
         source /usr/bin/virtualenvwrapper.sh
