@@ -17,6 +17,7 @@ virtualenvwrapper.shの書き換え(pythonからpython3.6に)
     fi
 
 ホームディレクトリ配下に~/.vim/colors/を作成する
+
     mkdir ~/.vim
     cd ~/.vim
     mkdir colors
