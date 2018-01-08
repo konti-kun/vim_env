@@ -16,3 +16,10 @@ virtualenvwrapper.shの書き換え(pythonからpython3.6に)
         source /usr/bin/virtualenvwrapper.sh
     fi
 
+ホームディレクトリ配下に~/.vim/colors/を作成する
+    mkdir ~/.vim
+    cd ~/.vim
+    mkdir colors
+    git clone https://github.com/tomasr/molokai
+    cp molokai/colors/molokai.vim ~/.vim/colors/
+

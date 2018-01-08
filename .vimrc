@@ -6,13 +6,17 @@ let mapleader = "\<Space>"
 set ignorecase
 set smartcase 
 set incsearch 
-set hlsearch    
+set hlsearch
 
 set shiftround
 set virtualedit=all
 set hidden
 set backspace=indent,eol,start
-
+colorscheme molokai 
+syntax on
+let g:molokai_original = 1
+let g:rehash256 = 1
+set background=dark
 set nowritebackup
 set nobackup
 set noswapfile
@@ -64,12 +68,17 @@ NeoBundleLazy "lambdalisue/vim-django-support", {
       \ "autoload": {
       \   "filetypes": ["python", "python3", "djangohtml"]
       \ }}
+NeoBundle "nvie/vim-flake8"
+nnoremap  <leader>l :call Flake8()
+NeoBundle "nathanaelkane/vim-indent-guides"
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_guide_size = 1
 " Vimで正しくvirtualenvを処理できるようにする
 NeoBundleLazy "miyakogi/vim-virtualenv", {
       \ "autoload": {
       \   "filetypes": ["python", "python3", "djangohtml"]
       \ }}
-let g:virtualenv_directory = '/home/env36'
+autocmd FileType python setlocal completeopt-=preview 
 NeoBundleLazy "davidhalter/jedi-vim", {
       \ "autoload": {
       \   "filetypes": ["python", "python3", "djangohtml"],
@@ -86,8 +95,7 @@ function! s:hooks.on_source(bundle)
   " 補完の最初の項目が選択された状態だと使いにくいためオフにする
   let g:jedi#popup_select_first = 0
   " quickrunと被るため大文字に変更
-  let g:jedi#rename_command = '<Leader>R'
-  autocmd FileType python setlocal completeopt-=preview 
+  let g:jedi#rename_command = '<Leader>R<CR>'
 endfunction
 call neobundle#end()
 
