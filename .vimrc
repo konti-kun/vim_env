@@ -1,104 +1,96 @@
+set nocompatible
+colorscheme molokai
+syntax on
+set clipboard=unnamed,autoselect
 set termencoding=utf-8
 set encoding=utf-8
-set fileencodings=iso-2022-jp,euc-jp,sjis,utf-8
-set fileformats=unix,dos,mac
+set fileencodings=utf-8,euc-jp,sjis,iso-2022-jp
 let mapleader = "\<Space>"
 set ignorecase
-set smartcase 
-set incsearch 
+set smartcase
+set incsearch
 set hlsearch
-
 set shiftround
 set virtualedit=all
 set hidden
 set backspace=indent,eol,start
-colorscheme molokai 
-syntax on
-let g:molokai_original = 1
-let g:rehash256 = 1
 set background=dark
 set nowritebackup
 set nobackup
 set noswapfile
 
-set number              " 行番号の表示
-set wrap                " 長いテキストの折り返し
-set textwidth=0         " 自動的に改行が入るのを無効化
-set colorcolumn=80      " その代わり80文字目にラインを入れるx
+set number
+set wrap
+set textwidth=0
+set colorcolumn=80
+autocmd BufNewFile,BufRead *.inc set filetype rst
+set statusline=%F%m%r%h%w\ [POS=%04l,%04v][%p%%]
+set laststatus=2
+nnoremap Y y$
+set display=lastline
+set pumheight=10
+set showmatch
+set matchtime=1
+nnoremap + <C-a>
+nnoremap - <C-x>
+autocmd filetype xml :set sw=2 sts=2 ts=2 et
+autocmd filetype html :set sw=2 sts=2 ts=2 et
+autocmd filetype js :set sw=2 sts=2 ts=2 et
+autocmd filetype ruby :set sw=2 sts=2 ts=2 et
 
-" 入力モード中に素早くjjと入力した場合はESCとみなす
 inoremap jj <Esc>
+nnoremap <C-n> gt
+nnoremap <C-p> gT
 
-
-" カーソル下の単語を * で検索
-vnoremap <silent> * "vy/\V<C-r>=substitute(escape(@v, '\/'), "\n", '\\n', 'g')<CR><CR>
-
-" fugitive.vimを横分割に
 set diffopt+=vertical
 
 if &compatible
-  set nocompatible               " Be iMproved
+  set nocompatibel
 endif
 
-set runtimepath+=~/.vim/bundle/neobundle.vim/
+set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim
 
-call neobundle#begin(expand('~/.vim/bundle/'))
-
-NeoBundleFetch 'Shougo/neobundle.vim'
-
-NeoBundleLazy "thinca/vim-quickrun", {
-      \ "autoload": {
-      \   "mappings": [['nxo', '<Plug>(quickrun)']]
-      \ }}
-nmap <Leader>r <Plug>(quickrun)
-vnoremap <C-r> :QuickRun
-let s:hooks = neobundle#get_hooks("vim-quickrun")
-function! s:hooks.on_source(bundle)
-  let g:quickrun_config = {
-      \ "*": {"split": "vertical"},
-      \ }
-endfunction
-NeoBundle "tpope/vim-fugitive"
-NeoBundleLazy "gregsexton/gitv", {
-      \ "depends": ["tpope/vim-fugitive"],
-      \ "autoload": {
-      \   "commands": ["Gitv"],
-      \ }}
-NeoBundleLazy "lambdalisue/vim-django-support", {
-      \ "autoload": {
-      \   "filetypes": ["python", "python3", "djangohtml"]
-      \ }}
-NeoBundle "nvie/vim-flake8"
-nnoremap  <leader>l :call Flake8()
-NeoBundle "nathanaelkane/vim-indent-guides"
-let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_guide_size = 1
-" Vimで正しくvirtualenvを処理できるようにする
-NeoBundleLazy "miyakogi/vim-virtualenv", {
-      \ "autoload": {
-      \   "filetypes": ["python", "python3", "djangohtml"]
-      \ }}
-autocmd FileType python setlocal completeopt-=preview 
-NeoBundleLazy "davidhalter/jedi-vim", {
-      \ "autoload": {
-      \   "filetypes": ["python", "python3", "djangohtml"],
-      \ },
-      \ "build": {
-      \   "mac": "pip install jedi",
-      \   "unix": "pip install jedi",
-      \ }}
-let s:hooks = neobundle#get_hooks("jedi-vim")
-function! s:hooks.on_source(bundle)
-  " jediにvimの設定を任せると'completeopt+=preview'するので
-  " 自動設定機能をOFFにし手動で設定を行う
-  let g:jedi#auto_vim_configuration = 0
-  " 補完の最初の項目が選択された状態だと使いにくいためオフにする
-  let g:jedi#popup_select_first = 0
-  " quickrunと被るため大文字に変更
-  let g:jedi#rename_command = '<Leader>R<CR>'
-endfunction
-call neobundle#end()
+if dein#load_state('~/.vim/dein/')
+	call dein#begin('~/.vim/dein/repos/github.com/Shougo/dein.vim')
+	call dein#add('thinca/vim-quickrun')
+	call dein#add('tpope/vim-fugitive')
+	call dein#add('vim-syntastic/syntastic')
+	call dein#add('Shougo/deoplete.nvim')
+	if !has('nvim')
+		call dein#add('roxma/nvim-yarp')
+		call dein#add('roxma/vim-hug-neovim-rpc')
+	endif
+	call dein#add('tpope/vim-endwise')
+	call dein#add('szw/vim-tags')
+  call dein#add('thinca/vim-ref')
+  call dein#add('yuku-t/vim-ref-ri')
+	call dein#end()
+	call dein#save_state()
+endif
 
 filetype plugin indent on
-NeoBundleCheck
+syntax enable
+
+if dein#check_install()
+	call dein#install()
+endif
+if dein#tap("vim-gufitive")
+	set diffopt+=vertical
+endif
+
+if dein#tap('Shougo/deoplete.nvim')
+	let g:deoplete#enable_at_startup = 1
+endif
+
+if dein#tap('vim-syntastic/syntastic')
+	let g:syntastic_mode_map = { 'mode': 'passive','active_filetypes': ['ruby'] }
+	let g:syntastic_ruby_checkers = ['rubocop']
+endif
+
+if dein#tap('thinca/vim-ref')
+	let g:ref_open = 'vsplit'
+	let g:ref_refe_cmd = "rurema"
+	let g:ref_refe_version = 2
+	nnoremap ,rr :<C-U>Ref refe<Space>
+endif
 
