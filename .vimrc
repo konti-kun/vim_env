@@ -37,10 +37,18 @@ autocmd filetype xml :set sw=2 sts=2 ts=2 et
 autocmd filetype html :set sw=2 sts=2 ts=2 et
 autocmd filetype js :set sw=2 sts=2 ts=2 et
 autocmd filetype ruby :set sw=2 sts=2 ts=2 et
+autocmd filetype yaml :set sw=2 sts=2 ts=2 et 
+autocmd filetype scss :set sw=2 sts=2 ts=2 et 
 
 inoremap jj <Esc>
-nnoremap <C-n> gt
-nnoremap <C-p> gT
+nnoremap <C-n> :cn<CR>
+nnoremap <C-p> :cp<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+" RSpec.vim mappings
+nnoremap <Leader>t :call RunCurrentSpecFile()<CR>
+nnoremap <Leader>s :call RunNearestSpec()<CR>
+nnoremap <Leader>l :call RunLastSpec()<CR>
+nnoremap <Leader>a :call RunAllSpecs()<CR>
 
 set diffopt+=vertical
 
@@ -60,10 +68,16 @@ if dein#load_state('~/.vim/dein/')
 		call dein#add('roxma/nvim-yarp')
 		call dein#add('roxma/vim-hug-neovim-rpc')
 	endif
+	call dein#add('vim-ruby/vim-ruby')
+	call dein#add('tpope/vim-rails')
+	call dein#add('thoughtbot/vim-rspec')
+	call dein#add('tpope/vim-rbenv')
+	call dein#add('tpope/vim-bundler')
 	call dein#add('tpope/vim-endwise')
 	call dein#add('szw/vim-tags')
-  call dein#add('thinca/vim-ref')
-  call dein#add('yuku-t/vim-ref-ri')
+	call dein#add('scrooloose/nerdtree')
+	call dein#add('thinca/vim-ref')
+	call dein#add('yuku-t/vim-ref-ri')
 	call dein#end()
 	call dein#save_state()
 endif
@@ -85,6 +99,12 @@ endif
 if dein#tap('vim-syntastic/syntastic')
 	let g:syntastic_mode_map = { 'mode': 'passive','active_filetypes': ['ruby'] }
 	let g:syntastic_ruby_checkers = ['rubocop']
+endif
+if dein#tap('thoughtbot/vim-rspec')
+	let g:rspec_command = "!bin/rspec {spec}"
+endif
+
+if dein#tap('scrooloose/nerdtree')
 endif
 
 if dein#tap('thinca/vim-ref')
