@@ -18,6 +18,7 @@ set background=dark
 set nowritebackup
 set nobackup
 set noswapfile
+autocmd FileType vue syntax sync fromstart
 
 set number
 set wrap
@@ -31,14 +32,20 @@ set display=lastline
 set pumheight=10
 set showmatch
 set matchtime=1
+nmap bb :ls<CR>:buf
 nnoremap + <C-a>
 nnoremap - <C-x>
-autocmd filetype xml :set sw=2 sts=2 ts=2 et
-autocmd filetype html :set sw=2 sts=2 ts=2 et
-autocmd filetype js :set sw=2 sts=2 ts=2 et
-autocmd filetype ruby :set sw=2 sts=2 ts=2 et
-autocmd filetype yaml :set sw=2 sts=2 ts=2 et 
-autocmd filetype scss :set sw=2 sts=2 ts=2 et 
+filetype plugin on
+filetype indent on
+autocmd filetype xml setlocal sw=2 sts=2 ts=2 et
+autocmd filetype html setlocal sw=2 sts=2 ts=2 et
+autocmd filetype javascript setlocal sw=2 sts=2 ts=2 et
+autocmd filetype ruby setlocal sw=2 sts=2 ts=2 et
+autocmd filetype yaml setlocal sw=2 sts=2 ts=2 et
+autocmd filetype scss setlocal sw=2 sts=2 ts=2 et
+autocmd filetype scss setlocal sw=2 sts=2 ts=2 et
+let &errorformat = '%[ #]%#%f:%l:%m'
+autocmd BufWritePre * :%s/\s\+$//ge
 
 inoremap jj <Esc>
 nnoremap <C-n> :cn<CR>
@@ -49,8 +56,12 @@ nnoremap <Leader>t :call RunCurrentSpecFile()<CR>
 nnoremap <Leader>s :call RunNearestSpec()<CR>
 nnoremap <Leader>l :call RunLastSpec()<CR>
 nnoremap <Leader>a :call RunAllSpecs()<CR>
+nmap <silent> <Leader>d <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 
-set diffopt+=vertical
+set diffopt=vertical
 
 if &compatible
   set nocompatibel
@@ -62,7 +73,6 @@ if dein#load_state('~/.vim/dein/')
 	call dein#begin('~/.vim/dein/repos/github.com/Shougo/dein.vim')
 	call dein#add('thinca/vim-quickrun')
 	call dein#add('tpope/vim-fugitive')
-	call dein#add('vim-syntastic/syntastic')
 	call dein#add('Shougo/deoplete.nvim')
 	if !has('nvim')
 		call dein#add('roxma/nvim-yarp')
@@ -78,9 +88,26 @@ if dein#load_state('~/.vim/dein/')
 	call dein#add('scrooloose/nerdtree')
 	call dein#add('thinca/vim-ref')
 	call dein#add('yuku-t/vim-ref-ri')
+	call dein#add('bronson/vim-trailing-whitespace')
+	call dein#add('neoclide/coc.nvim',{'rev':'release'})
+	call dein#add('leafOfTree/vim-vue-plugin')
+	call dein#add('w0rp/ale')
+	call dein#add('leafgarland/typescript-vim')
 	call dein#end()
 	call dein#save_state()
 endif
+let g:coc_global_extensions = ['coc-solargraph']
+
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
 
 filetype plugin indent on
 syntax enable
@@ -95,14 +122,9 @@ endif
 if dein#tap('Shougo/deoplete.nvim')
 	let g:deoplete#enable_at_startup = 1
 endif
+let g:ale_fixers = {'ruby': ['rubocop'],'typescript': ['tsserver'] }
 
-if dein#tap('vim-syntastic/syntastic')
-	let g:syntastic_mode_map = { 'mode': 'passive','active_filetypes': ['ruby'] }
-	let g:syntastic_ruby_checkers = ['rubocop']
-endif
-if dein#tap('thoughtbot/vim-rspec')
-	let g:rspec_command = "!bin/rspec {spec}"
-endif
+let g:rspec_command = "!bin/rspec {spec}"
 
 if dein#tap('scrooloose/nerdtree')
 endif
